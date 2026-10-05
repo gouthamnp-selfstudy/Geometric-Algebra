@@ -1,0 +1,709 @@
+\documentclass[12pt]{article}
+
+\usepackage{animate}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[backend=biber, style=numeric]{biblatex}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, urlcolor=blue, citecolor=black, linkcolor=black]{hyperref}
+\usepackage{pgfplots}
+\usepackage{parskip}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{titling}
+\usepackage{url}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta}
+
+\newtcolorbox[auto counter]{notebox}[1][] {
+  colback=yellow!10!white,
+  colframe=yellow!50!black,
+  fonttitle=\bfseries,
+  title={Note \thetcbcounter},
+  #1
+}
+\addbibresource{WhatAreVectors.bib}
+\pgfplotsset{compat=1.18}
+\newtheorem{definition}{Definition}
+
+\setlength{\droptitle}{-2em}
+\title{What Are Vectors?}
+\author{Goutham Pedinedi}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+
+You've probably done Algebra 1 (or whatever it is in your school system). You've probably heard way earlier that you could add and subtract stuff together, be it numbers, variables, or entire functions.
+
+Well, vectors, notated with $\vec{v}$ are similar structures. They can be, like numbers and variables, added together to form a new unit, and similarly, they can be subtracted; additionally, like functions, they can be scaled and (loosely) shifted.
+
+However, unlike numbers or variables, but similar to functions, they represent stuff located on the x and y axes (also in higher planes, but that's a topic for another section). And, unlike functions, they aren't really ``input-and-output''. They're more like (here's comes the reveal) here are your coordinates, now draw an arrow to it.
+
+TL;DR\@: you could think of vectors as representing coordinate points, but it's an arrow representing that rather than a single point.
+
+\section{A Bit More Formal}
+
+Well, the description I provided was very hand-wavy, and being the person I am, I hate that type of description, so here's the more formal definition, beginning with the foundational axioms of a vector space, a space where vectors exist and certain operations can be performed on them.
+
+\begin{notebox}
+    From here onwards, $\vec{s}$ (where s is any vector) will be used to notate a vector.
+\end{notebox}
+
+\subsection{Vector Spaces (Introduction)}\label{subsec:axioms}
+
+\begin{definition}
+    Given vector space $\mathbf{V}$ is a set over a field $\mathbf{F}$ of scalars that contains $\vec{0}$ (the zero vector) and has the properties of $\vec{v} + \vec{w}$ (vectors) for vectors $\vec{v}$ \text{and} $\vec{w}$ and $s\vec{v}$ for number/scalar \emph{s} and vector $\vec{v}$, the following axioms are satisfied \textup{\cite{axiomsUCB}:}
+\end{definition}
+\begin{enumerate}
+    \item $\vec{v} + \vec{w} = \vec{w} + \vec{v} \ \ \forall \vec{v}, \vec{w} \in \mathbf{V} $ (commutativity)~\cite{axiomsUCB}
+    \item $\vec{u} + (\vec{v} + \vec{w}) = (\vec{u} + \vec{v}) + \vec{w} \ \ \forall \vec{u}, \vec{v}, \vec{w} \in \mathbf{V} $ (associativity)~\cite{axiomsUCB}
+    \item $\vec{0} + \vec{v} = \vec{v} \ \ \forall \vec{v} \in \mathbf{V} $ (additive identity)~\cite{axiomsUCB}
+    \item $\forall \vec{v} \in \mathbf{V} \ \exists \vec{w} $ (where $\vec{w} = -\vec{v} $) $ | \ \vec{v} + \vec{w} = \vec{0} $ (additive inverse)~\cite{axiomsUCB}
+    \item $\forall \vec{v} \in \mathbf{V} \ \ 1\vec{v} = \vec{v} $ (scalar multiplicative identity)~\cite{axiomsUCB}
+    \item $\forall \lambda, \mu \in \mathbf{F} $ and $\forall \vec{v} \in \mathbf{V}, \ \lambda(\mu\vec{v}) = (\lambda\mu)\vec{v} $ (scalar associativity)~\cite{axiomsUCB}
+    \item $\forall \lambda \in \mathbf{F} $ and $\forall \vec{v}, \vec{w} \in \mathbf{V}, \ \lambda(\vec{v} + \vec{w}) = \lambda\vec{v} + \lambda\vec{w} $ (scalar distributivity over vector addition)~\cite{axiomsUCB}
+    \item $\forall \lambda, \mu \in \mathbf{F} $ and $\forall \vec{v} \in \mathbf{V}, \ (\lambda + \mu)\vec{v} = \lambda\vec{v} + \mu\vec{v} $ (vector distributivity over scalar addition)~\cite{axiomsUCB}
+\end{enumerate}
+
+This is pretty complex and is a lot to digest, so let me break this down in simpler terms. You can switch around vectors, which, as mentioned previously, are algebraic constructs, in vector addition, multiply them by scalars (which are normal numbers), and distribute over addition.
+
+\subsection{But\ldots What is a Vector?}
+
+This entire time, I've been avoiding defining what a vector actually is. I've described them, I've defined vector spaces, I've provided summaries of the two, but I never actually defined what a vector really is.
+
+Well, a vector is an element of a vector space that satisfies all of the space's axioms. But it is also, in Euclidean space, the most common space where a vector is used, an object possessing both a magnitude and a direction that is represented using a tuple of real numbers.
+
+In short, a vector is just this:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.2, 0) -- (2.2, 0) node[right] {$x$};
+        \draw[<->] (0, -2.5) -- (0, 2.5) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (1, 2) 
+            node[anchor=south west] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Vector from origin to (5, 10)}
+\end{figure}
+
+\section{A Bit Deeper}
+
+Well, now that we have this, what can we really do with this? Like, how does vector addition work? How does scalar multiplication work? Why are vectors on orthonormal axes?
+
+\subsection{Vector Addition}
+
+Well, how do you add something that has both a magnitude and a direction?
+
+\begin{notebox}
+    I use $\vec{v}$ as the resultant vector (vector that results from mathematical operations) in my diagrams.
+\end{notebox}
+
+\subsubsection{Orthogonal}
+
+Imagine if you moved ten steps east and then 5 steps north; what would your final position be? 
+
+Using the standard x and y axes, your final position would be (10, 5). So, how would you represent that using a single arrow?
+
+You'd draw the arrow from the start of the first vector to the tip of the second, as pictured below:
+
+\begin{notebox}[label={notebox:conventionreasons}]
+    Since, by convention and somewhat for mathematical reasons (explained later), all vectors start at the origin, you'd first have to affix the tail of the second to the tip of the first.
+\end{notebox}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+        
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (2, 0) 
+            node[pos=.7, above] {$\vec{u}$};
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (0, 1) 
+            node[pos=.5, left] {$\vec{w}_{og}$};
+        
+        \draw[line width=1.5pt, gray, -Stealth] (2, 0) -- (2, 1)
+            node[pos=.5, right] {$\vec{w}$};
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (2, 1)
+            node[anchor= south west] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Vector addition for vectors from (0, 0) to (10, 0) and (10, 0) to (10, 5)}
+\end{figure}
+
+\subsubsection{Any Direction}
+
+But what if you traveled southeast and northeast? How would you add that?
+
+You'd do the same exact thing as you did before. Start to tip, as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (1, -1) 
+            node[pos=.6, above] {$\vec{u}$};
+        
+        \draw[line width=1.5pt, gray, -Stealth] (1, -1) -- (2, 2)
+            node[pos=.5, right] {$\vec{w}$};
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (2, 2)
+            node[anchor= south west] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Vector addition for vectors from (0, 0) to (5, \textminus5) and (5, \textminus5) to (10, 10)}
+\end{figure}
+
+\subsubsection{More???}
+
+What if you wanted to add three (or more) vectors?
+
+Add any two vectors (refer to~\ref{subsec:axioms} for associativity), then add the third vector to the resultant vector (and so on), as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-3.5, -3.2) grid (3.5, 3.2);
+
+        \draw[<->] (-3.5, 0) -- (3.5, 0) node[right] {$x$};
+        \draw[<->] (0, -3.2) -- (0, 3.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-3, -2, -1, 1, 2, 3}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-3, -2, -1, 1, 2, 3}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (1, 0) 
+            node[pos=.5, above] {$\vec{u}$};
+        
+        \draw[line width=1.5pt, gray, -Stealth] (1, 0) -- (2, 1)
+            node[pos=.25, right] {$\vec{w}$};
+        
+        \draw[line width=1.5pt, gray, -Stealth] (2, 1) -- (1, 3)
+            node[pos=.5, right] {$\vec{t}$};
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (1, 3)
+            node[anchor= south west] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Vector addition for vectors from (0, 0) to (5, 0), (5, 0) to (10, 5), and (10, 5) to (5, 15)}
+\end{figure}
+
+\subsubsection{But What About 3D?}
+
+Since creating 3D demonstrations would be tedious, I have linked a Desmos 3D graph instead:
+\href{https://www.desmos.com/3d/yfott2zvdh}{View Interactive 3D Model}
+
+\subsection{Scalar Multiplication}
+
+\subsubsection{Why the Name ``Scalar''?}
+
+Well, why the name scalar? It sounds awfully similar to scaling, but scalars are, after all, just numbers, not the scale of something.
+
+The thing is, they actually are used to scale stuff. Specifically, as you guessed it vectors.
+
+For example, $2\vec{v}$ is twice the magnitude of $\vec{v}$, as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (1, 1) 
+            node[pos=.4, above] {$\vec{u}$};
+        
+        \draw[line width=1.5pt, gray, -Stealth, opacity=0.5] (0, 0) -- (2, 2)
+            node[pos=.8, below] {$\vec{u}'$};
+            
+    \end{tikzpicture}
+    \caption{Scaling vector from (0, 0) to (5, 5) by 2}
+\end{figure}
+
+\begin{notebox}
+    As stated in~\ref{notebox:conventionreasons}, there are mathematical reasons for starting at 0. The main reason for this is that when you scale a vector by 0, you get $\vec{0}$, and it'd be inconvenient for $\vec{0}$ to not be at (0, 0).
+\end{notebox}
+
+\subsubsection{Scaling then Adding}
+
+So how would you add a scaled vector to another vector? You'd just scale the first normally, and then add them together, as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (1, 1) 
+            node[pos=.4, above] {$\vec{u}$};
+        
+        \draw[line width=1.5pt, black, -Stealth, opacity=0.2] (0, 0) -- (2, 2)
+            node[pos=.65, above] {$\vec{u}'$};
+
+        \draw[line width=1.5pt, gray, -Stealth] (2, 2) -- (1, -1)
+            node[pos=.5, right] {$\vec{w}$};
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (1, -1)
+            node[pos=.6, left] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Scaling vector from (0, 0) to (5, 5) by 2 and then adding it to the vector from (10, 10) to (5, \textminus5)}
+\end{figure}
+
+And the same idea would apply for scaling both by the same number.
+
+You could either multiply the resultant vector, as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (1, 1) 
+            node[pos=.6, below] {$\vec{u}$};
+
+        \draw[line width=1.5pt, gray, -Stealth] (1, 1) -- (-1, 1)
+            node[pos=.7, above] {$\vec{w}$};
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (-1, 1)
+            node[pos=.6, below] {$\vec{v}$};
+        
+        \draw[line width=1.5pt, blue, -Stealth, opacity=0.3] (0, 0) -- (-2, 2)
+            node[pos=.8, below] {$\vec{v}'$};
+            
+    \end{tikzpicture}
+    \caption{Scaling resultant vector of the addition of vectors from (0, 0) to (5, 5) and (5, 5) to (\textminus5, 5) by 2}
+\end{figure}
+
+Or you could distribute then add (refer to~\ref{subsec:axioms} for distributivity), as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (1, 1) 
+            node[pos=.6, below] {$\vec{u}$};
+
+        \draw[line width=1.5pt, black, -Stealth, opacity=.3] (0, 0) -- (2, 2) 
+            node[pos=.75, below] {$\vec{u}'$};
+
+        \draw[line width=1.5pt, gray, -Stealth] (2, 2) -- (0, 2)
+            node[pos=.5, above] {$\vec{w}$};
+
+        \draw[line width=1.5pt, black, -Stealth, opacity=.3] (2, 2) -- (-2, 2)
+            node[pos=.75, above] {$\vec{w}'$};
+        
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (-2, 2)
+            node[pos=.5, below] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Scaling the vectors from (0, 0) to (5, 5) and (5, 5) to (\textminus5, 5) by 2 then adding them}
+\end{figure}
+
+\subsubsection{Negatives???}
+
+Remember when I mentioned that a vector space is over a field, and that, by axiomatic definition, there is an additive inverse that is the negatively-scaled version of the original vector (refer to~\ref{subsec:axioms} for the additive inverse)?
+
+Well, here is a visualization of that:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+        \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (2, 2) 
+            node[pos=.5, above] {$\vec{u}$};
+
+        \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (-2, -2)
+            node[pos=.5, below] {$-\vec{u}$};
+        
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (0, 0)
+            node[pos=.5, above] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \hspace{2em}
+    \begin{tikzpicture}[scale=1, transform shape]
+    
+    \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+    \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+    \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+    \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+    {
+        \node[below] at (\x, 0) {\small \label};
+    };
+    \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+    {
+        \node[left] at (0, \y) {\small \label};
+    };
+
+    \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (2, 2) 
+        node[pos=.5, above] {$\vec{u}$};
+
+    \draw[line width=1.5pt, black, -Stealth, opacity=.3] (2, 2) -- (0, 0)
+        node[pos=.5, below] {$-\vec{u}'$};
+    
+    \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (0, 0)
+        node[pos=.5, above] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Adding the vector from (0, 0) to (10, 10) and its additive inverse}
+\end{figure}
+
+\subsubsection{Subtraction}
+
+Well, we have addition, negatives, and additive inverses, so we should obviously have subtraction for any vector.
+
+We do, and it's the exact same thing as additive inverses. Just flip the vector that's negative and add it to the other vector, as pictured below:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+    
+    \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+    \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+    \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+    \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+    {
+        \node[below] at (\x, 0) {\small \label};
+    };
+    \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+    {
+        \node[left] at (0, \y) {\small \label};
+    };
+
+    \draw[line width=1.5pt, gray, -Stealth] (0, 0) -- (1, 1) 
+        node[pos=.4, above] {$\vec{u}$};
+
+    \draw[line width=1.5pt, gray, -Stealth] (1, 1) -- (1, 2) 
+        node[pos=.5, left] {$\vec{w}$};
+
+    \draw[line width=1.5pt, black, -Stealth, opacity=.5] (1, 1) -- (1, 0) 
+        node[pos=.5, right] {$-\vec{w}$};
+
+    % \draw[line width=1.5pt, black, -Stealth, opacity=.3] (2, 2) -- (0, 0)
+    %     node[pos=.5, below] {$-\vec{u}'$};
+    
+    \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (1, 0)
+        node[pos=.5, below] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Subtracting the vector from (5, 5) to (5, 10) from the vector from (0, 0) to (5, 5)}
+\end{figure}
+
+\subsection{But How Do You Represent a Vector?}
+
+You've probably wondered by now, how do you actually represent vectors, because all we've been doing until now is mostly geometric or using pairs of ordered pairs. Like what are they actually useful for except for nice drawings of lines?
+
+There are 2 common orthogonal representations in mathematics, and one coordinate-free one.
+
+The orthogonal ones are (for 2D vectors)
+$\langle x_{\text{coord}}, y_{\text{coord}} \rangle$ and $\begin{bmatrix}x_{\text{coord}} \\ y_{\text{coord}}\end{bmatrix}$
+
+The coordinate-free one is
+$x_{\text{coord}}\hat{\imath} + y_{\text{coord}}\hat{\jmath}$ (or $x_{\text{coord}}\mathbf{e}_1 + y_{\text{coord}}\mathbf{e}_2$)
+
+But now you're probably wondering, what \emph{are} $\hat{\imath}$ and $\hat{\jmath}$.
+
+Well, that is a really good question, and that brings us to our next section.
+
+\section{Basis Vectors and Stuff}
+
+Well, $\hat{\imath}$ and $\hat{\jmath}$ are as basis vectors.
+
+But what are basis vectors, you may ask?
+
+They are the building blocks of any vector. In more precise terms, they are the most elementary units of a vector space. A vector is just the addition of scaled basis vectors, and scalar multiplication is just scaling them further.
+
+\begin{notebox}
+    I will be referring to vector addition as ``the linear combination of two vectors'' from now on.
+\end{notebox}
+
+\subsubsection{But Why?}
+
+But why would you need them? Can't you just draw an arrow in space? Like, can't I just do this:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+
+        \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+        \draw[<->] (-2.2, 0) -- (2.2, 0) node[right] {$x$};
+        \draw[<->] (0, -2.5) -- (0, 2.5) node[above] {$y$};
+        
+        \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+        {
+            \node[below] at (\x, 0) {\small \label};
+        };
+        \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+        {
+            \node[left] at (0, \y) {\small \label};
+        };
+
+        \draw[line width=1.5pt, blue, -Stealth] (0, 0) -- (2, 1) 
+            node[anchor=south west] {$\vec{v}$};
+            
+    \end{tikzpicture}
+    \caption{Vector drawn using an arrow}
+\end{figure}
+
+Sure, you could do that, and that would work perfectly fine.
+
+But then, vectors would be purely useless for actual stuff; they'd just be the playthings of mathematicians.
+
+That's where basis vectors come in; they allow you to actually assign an ``address'' to a vector, permitting concrete calculations and simpler representations.
+
+\subsubsection{What is a Valid Basis}
+
+But as always, mathematicians (before me, obviously) have created a set of rules that basis vectors need to satisfy in order to be considered basis vectors.
+
+Unless you're in a 0D space, any vector can function as a valid basis vector, so how would you actually show that basis vectors are valid?
+
+The real verification of the validity of bases comes from checking the set of bases. Specifically, a set of bases must be linearly independent and must span the space the set acts as the bases of.
+
+More formally,
+\begin{definition}
+    A basis \textbf{B} of a vector space \textbf{V} over a field \textbf{F} is a linearly independent subset of V that spans V \textup{\cite{enwiki:1373603812}}.
+\end{definition}
+
+What do these mean though?
+
+\begin{definition}
+    For every finite subset of bases $\{\vec{v}_1, \ldots, \vec{v}_n \}$ of linearly-indepedent set \textbf{B}, if $\sum_{i=1}^{n} {a_i}{v_i} = 0$ for some scalars $a_1, \ldots, a_n$, then $a_1 = \cdots = a_n = 0$ \textup{\cite{enwiki:1373603812}}.
+\end{definition}
+
+In practice, being linearly independent means that the bases must not be a scale of each other. This means that a set of bases for a 2D space cannot include $\{\hat{\imath}, \hat{\jmath}, 2\hat{\jmath}\}$, as $2\hat{\jmath}$ is a scale of $\hat{\jmath}$
+
+\begin{definition}
+    For every vector $\vec{v}$ in \textbf{V} of bases, one can choose $\{a_{1} \ldots ,a_{n}\}$ in \textbf{F} and $\{\vec{v}_1, \ldots, \vec{v}_n \} \ | \ \vec{v} = \sum_{i=1}^{n}{a_i}{v _i}$ in \textbf{B} \textup{\cite{enwiki:1373603812}}.
+\end{definition}
+
+In practice, for a set of basis vectors to span an n-dimensional space, you need to have n linearly-independent vectors.
+
+Here's a visualization why:
+
+\href{https://www.dropbox.com/scl/fi/91rnwarpjem9i398tlmlo/VectorScene.mp4}{Vector Span Animation}
+
+\section{Magnitude and Unit Vectors}
+
+\subsection{Magnitude}
+
+\subsubsection{Magnitude???}
+
+I've previously mentioned that a vector has both a direction and a magnitude. You can represent direction using its ``address'', but how can you find the magnitude of a vector (a 2D one in particular)?
+
+But wait, what even even is a magntiude?
+
+\subsubsection{Definition of Magnitude}
+
+Well, the magnitude is simply the geometric length of a vector.
+
+But how do we find it?
+
+\subsubsection{Finding a Magnitude}
+The steps:
+\begin{enumerate}
+    \item Define a Cartesian coordinate system on $\mathbf{R}^2$ (2D space of real numbers) using two perpendicular axes with a fixed unit scale.
+    \item Represent a vector $\vec{v}$ as an ordered pair of real numbers $(x, y)$, corresponding to displacement along these coordinate axes.
+    \item Apply the Euclidean distance formula (derived from the geometric Pythagorean Theorem) to define the vector's magnitude as $\|\vec{v}\|$ (magnitude) $:=$ $\sqrt{x^2 + y^2}$ (Pythagorean Theorem), since the vector is the hypotenuse formed by it and its two components.
+\end{enumerate}
+
+Here's a visualization of that idea:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+    
+    \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+    \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+    \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+    \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+    {
+        \node[below] at (\x, 0) {\small \label};
+    };
+    \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+    {
+        \node[left] at (0, \y) {\small \label};
+    };
+
+    \draw[line width=1.5pt, blue, -stealth] (0, 0) -- (1, 2) 
+        node[pos=.5, left] {$\vec{v}$};
+
+    \draw[line width=1.5pt, gray, -stealth] (0, 0) -- (1, 0)
+        node[pos=.5, below] {$x$};
+    
+    \draw[line width=1.5pt, gray, -stealth] (1, 0) -- (1, 2)
+        node[pos=.5, right] {$y$};
+    
+    \end{tikzpicture}
+    \caption{Components of a vector for magnitude}
+\end{figure}
+
+You can expand this idea to 3D by adding $z$ to the mix, and further for more dimensions.
+
+\subsection{Unit Vectors}
+
+With magnitude out the way, the final topic of this article, unit vectors, is pretty easy to explain.
+
+Sometimes in physics and geometry, you care deeply about the direction an object is moving, but you don't want its speed or length scaling your calculations. And the multiplicative identity of standard arithmetic is 1, so a unit vector is just a vector with a magnitude of 1.
+
+But how do we find the unit vector of any arbitrary vector?
+
+You peform the act of normalizing a vector, a.k.a dividing the components of a vector (the scalars of each basis vector) by the magnitude. Formally, it's $\hat{v} (unit vector) := \frac{\vec{v}}{\|\vec{v}\|}$ (hence why the basis vectors $\hat{\imath}$ and $\hat{\jmath}$ have a hat over them: they're unit basis vectors).
+
+Think of it this way: if a vector is 5 units long, how do you make it 1 unit long without changing where it points? You scale it down by a factor of 5.
+
+Here is a visualization:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+    
+    \draw[thin, gray!40] (-2.5, -2.2) grid (2.5, 2.2);
+
+    \draw[<->] (-2.5, 0) -- (2.5, 0) node[right] {$x$};
+    \draw[<->] (0, -2.2) -- (0, 2.2) node[above] {$y$};
+
+    \foreach \x [evaluate=\x as \label using int(\x * 5)] in {-2, -1, 1, 2}
+    {
+        \node[below] at (\x, 0) {\small \label};
+    };
+    \foreach \y [evaluate=\y as \label using int(\y * 5)] in {-2, -1, 1, 2}
+    {
+        \node[left] at (0, \y) {\small \label};
+    };
+
+    \draw[line width=1.5pt, gray, -stealth] (0, 0) -- (1, 2) 
+        node[pos=.7, left] {$\vec{v}$};
+
+    \draw[line width=1.5pt, blue, -stealth] (0, 0) -- ({1/sqrt(5)}, {2/sqrt(5)})
+        node[pos=.4, right] {$\hat{v}$};
+    
+    \end{tikzpicture}
+    \caption{Vector and its normalized/unit vector}
+\end{figure}
+
+And with this, the first article of the series on Geometric Algebra is over!
+
+\printbibliography{}
+\end{document}
